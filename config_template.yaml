@@ -1,0 +1,23 @@
+aliyun:
+  key: "aliyun_key"
+  secret: "aliyun_secret"
+
+mysql:
+  dsn: "user:passwd@tcp(mysql.address:3306)/dbname?charset=utf8&parseTime=True&loc=Local"
+
+
+handler:
+  template_dir: "/host_template_dir"
+  handlers:
+    uat-win:
+      type: "hosts"
+      args: ["true"]
+      cmd:
+        - command: "ansible"
+          args: ["uat_*", "-m", "win_copy", "-a", "src=/host_template_dir/uat-win/hosts dest=C:/Windows/System32/Drivers/etc/hosts", "-f", "100"]
+
+    uat-linux:
+      type: "command"
+      cmd:
+        - command: "ssh"
+          args: ["septnet@127.0.0.1", "sudo /update_scripts_dir/updateHosts"]
